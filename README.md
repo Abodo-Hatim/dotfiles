@@ -21,6 +21,7 @@
 ### 1. Install essential tools
 
 ```bash
+wsl --install
 sudo apt update && sudo apt upgrade -y
 sudo apt install -y build-essential gcc gdb make git curl wget ripgrep nodejs npm
 ```
