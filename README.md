@@ -1,9 +1,8 @@
 # dotfiles 🚀
 
-> A complete development environment — Neovim + ZSH + Oh My Zsh
+> A complete development environment for 1337 school — Neovim + ZSH + Oh My Zsh
 
 ---
-
 ## Requirements
 
 | Tool | Version |
@@ -16,19 +15,53 @@
 
 ---
 
-## Installation from scratch
+## Table of Contents
 
-### 1. Install essential tools
+- [Windows Setup (WSL)](#windows-setup-wsl)
+- [Mac Setup (1337 school)](#mac-setup-1337-school)
+- [File Structure](#file-structure)
+- [Neovim Plugins](#neovim-plugins)
+- [ZSH Plugins](#zsh-plugins)
+- [Key Mappings](#key-mappings)
+- [Update Dotfiles](#update-dotfiles)
 
-```bash
+---
+
+## Windows Setup (WSL)
+
+### 1. Install WSL 2
+
+
+```powershell
 wsl --install
-sudo apt update && sudo apt upgrade -y
-sudo apt install -y build-essential gcc gdb make git curl wget ripgrep nodejs npm
 ```
 
 ---
 
-### 2. Install Neovim 0.12.0
+### 2. Update the system
+
+```bash
+sudo apt update && sudo apt upgrade -y
+```
+
+---
+
+### 3. Install essential development tools
+
+```bash
+sudo apt install -y build-essential gcc gdb make git curl wget
+```
+
+| Tool | Version | Role |
+|------|---------|------|
+| `gcc` | 13.3.0 | C compiler |
+| `gdb` | 15.1 | Debugger |
+| `make` | 4.3 | Build automation |
+| `git` | 2.43.0 | Version control |
+
+---
+
+### 4. Install Neovim 0.12.0
 
 ```bash
 # Download
@@ -47,28 +80,91 @@ sudo ln -s /opt/nvim/bin/nvim /usr/local/bin/nvim
 nvim --version | head -1
 ```
 
-> **On Mac:**
-> ```bash
-> brew install neovim
-> ```
+---
+
+### 5. Create Neovim config structure - (Optional)
+
+```bash
+mkdir -p ~/.config/nvim/lua/plugins
+touch ~/.config/nvim/init.lua
+touch ~/.config/nvim/lua/options.lua
+touch ~/.config/nvim/lua/keymaps.lua
+```
 
 ---
 
-### 3. Install ZSH + Oh My Zsh
+### 6. Install lazy.nvim
 
 ```bash
-# Install zsh
+git clone --filter=blob:none --branch=stable \
+  https://github.com/folke/lazy.nvim.git \
+  ~/.local/share/nvim/lazy/lazy.nvim
+```
+
+---
+
+### 7. Apply dotfiles
+
+```bash
+# Clone the repo
+git clone git@github.com:Abodo-Hatim/dotfiles.git ~/dotfiles
+
+# Copy Neovim config
+cp -r ~/dotfiles/nvim ~/.config/nvim
+
+# Copy ZSH config
+cp ~/dotfiles/.zshrc ~/.zshrc
+```
+
+---
+
+### 8. Open Neovim and install plugins
+
+```bash
+nvim
+```
+
+lazy.nvim will automatically install all plugins on first launch.
+
+Then install treesitter parsers inside Neovim:
+
+```
+:TSInstall c lua vim bash
+```
+
+---
+
+### 9. Install ripgrep (required for telescope live grep)
+
+```bash
+sudo apt install -y ripgrep
+```
+
+---
+
+### 10. Install Nerd Font
+
+- Download **JetBrainsMono Nerd Font** from [nerdfonts.com](https://www.nerdfonts.com/font-downloads)
+- Extract and install all `.ttf` files (right click → Install for all users)
+- Open your terminal settings and set the font to `JetBrainsMono Nerd Font`
+
+---
+
+### 11. Install ZSH + Oh My Zsh
+
+```bash
+# Install ZSH
 sudo apt install -y zsh
 
 # Install Oh My Zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 ```
 
-> **On Mac:** zsh is pre-installed — install Oh My Zsh directly
+When asked: `Do you want to change your default shell to zsh? [Y/n]` → type `Y`
 
 ---
 
-### 4. Install ZSH plugins
+### 12. Install ZSH plugins
 
 ```bash
 # zsh-autosuggestions
@@ -80,9 +176,70 @@ git clone https://github.com/zsh-users/zsh-syntax-highlighting \
   ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 ```
 
+Enable plugins in `~/.zshrc`:
+
+```bash
+plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
+```
+
 ---
 
-### 5. Install lazy.nvim
+### 14. Setup SSH key and connect to GitHub
+
+```bash
+# Configure git
+git config --global user.name "Your Name"
+git config --global user.email "your@email.com"
+
+# Generate SSH key
+ssh-keygen -t ed25519 -C "your@email.com"
+
+# Copy public key
+cat ~/.ssh/id_ed25519.pub
+```
+
+Add the public key to [github.com/settings/keys](https://github.com/settings/keys)
+
+Verify connection:
+
+```bash
+ssh -T git@github.com
+```
+
+---
+
+## Mac Setup (1337 school)
+
+> **Note:** 1337 machines are shared — we use HTTPS instead of SSH to avoid leaving personal credentials on shared computers.
+
+### 1. Install Homebrew
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+---
+
+### 2. Install essential tools
+
+```bash
+brew install gcc gdb make git curl wget ripgrep node
+```
+
+---
+
+### 3. Install Neovim
+
+```bash
+brew install neovim
+
+# Verify
+nvim --version | head -1
+```
+
+---
+
+### 4. Install lazy.nvim
 
 ```bash
 git clone --filter=blob:none --branch=stable \
@@ -92,11 +249,39 @@ git clone --filter=blob:none --branch=stable \
 
 ---
 
-### 6. Clone dotfiles and apply
+### 5. Install Oh My Zsh
 
 ```bash
-# Clone the repo
-git clone git@github.com:Abodo-Hatim/dotfiles.git ~/dotfiles
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+```
+
+---
+
+### 6. Install ZSH plugins
+
+```bash
+# zsh-autosuggestions
+git clone https://github.com/zsh-users/zsh-autosuggestions \
+  ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+
+# zsh-syntax-highlighting
+git clone https://github.com/zsh-users/zsh-syntax-highlighting \
+  ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+```
+
+Enable plugins in `~/.zshrc`:
+
+```bash
+plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
+```
+
+---
+
+### 7. Apply dotfiles via HTTPS
+
+```bash
+# Clone the repo using HTTPS (no SSH key needed)
+git clone https://github.com/Abodo-Hatim/dotfiles.git ~/dotfiles
 
 # Copy Neovim config
 cp -r ~/dotfiles/nvim ~/.config/nvim
@@ -110,21 +295,11 @@ source ~/.zshrc
 
 ---
 
-### 7. Install Nerd Font
-
-- Download **JetBrainsMono Nerd Font** from [nerdfonts.com](https://www.nerdfonts.com/font-downloads)
-- Install it and set it as your terminal font
-- Required for icons to display correctly in Neovim
-
----
-
 ### 8. Open Neovim and install plugins
 
 ```bash
 nvim
 ```
-
-lazy.nvim will automatically install all plugins on first launch.
 
 Then install treesitter parsers:
 
@@ -134,40 +309,48 @@ Then install treesitter parsers:
 
 ---
 
-## File structure
+### 9. Install Nerd Font on Mac
+
+- Download **JetBrainsMono Nerd Font** from [nerdfonts.com](https://www.nerdfonts.com/font-downloads)
+- Double click each `.ttf` file → Install Font
+- Set the font in your terminal preferences
+
+---
+
+## File Structure
 
 ```
 dotfiles/
-├── .zshrc                  ← ZSH config
+├── .zshrc                      ← ZSH config
 └── nvim/
-    ├── init.lua            ← Entry point
+    ├── init.lua                ← Entry point
     └── lua/
-        ├── options.lua     ← Editor settings
-        ├── keymaps.lua     ← Key mappings
+        ├── options.lua         ← Editor settings
+        ├── keymaps.lua         ← Key mappings
         └── plugins/
-            ├── colorscheme.lua
-            ├── lualine.lua
-            ├── nvim-tree.lua
-            ├── telescope.lua
-            ├── autopairs.lua
-            ├── comment.lua
-            └── treesitter.lua
+            ├── colorscheme.lua ← tokyonight theme
+            ├── lualine.lua     ← Status line
+            ├── nvim-tree.lua   ← File explorer
+            ├── telescope.lua   ← Fuzzy finder
+            ├── autopairs.lua   ← Auto close brackets
+            ├── comment.lua     ← Easy commenting
+            └── treesitter.lua  ← Syntax highlighting
 ```
 
 ---
 
 ## Neovim Plugins
 
-| Plugin | Version | Role |
-|--------|---------|------|
-| [lazy.nvim](https://github.com/folke/lazy.nvim) | stable | Plugin manager |
-| [tokyonight.nvim](https://github.com/folke/tokyonight.nvim) | latest | Color theme |
-| [lualine.nvim](https://github.com/nvim-lualine/lualine.nvim) | latest | Status line |
-| [nvim-tree.lua](https://github.com/nvim-tree/nvim-tree.lua) | latest | File explorer |
-| [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) | latest | Fuzzy finder |
-| [nvim-autopairs](https://github.com/windwp/nvim-autopairs) | latest | Auto close brackets |
-| [Comment.nvim](https://github.com/numToStr/Comment.nvim) | latest | Easy commenting |
-| [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter) | latest | Syntax highlighting |
+| Plugin | Role |
+|--------|------|
+| [lazy.nvim](https://github.com/folke/lazy.nvim) | Plugin manager |
+| [tokyonight.nvim](https://github.com/folke/tokyonight.nvim) | Color theme |
+| [lualine.nvim](https://github.com/nvim-lualine/lualine.nvim) | Status line |
+| [nvim-tree.lua](https://github.com/nvim-tree/nvim-tree.lua) | File explorer |
+| [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) | Fuzzy finder |
+| [nvim-autopairs](https://github.com/windwp/nvim-autopairs) | Auto close brackets |
+| [Comment.nvim](https://github.com/numToStr/Comment.nvim) | Easy commenting |
+| [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter) | Syntax highlighting |
 
 ---
 
@@ -182,7 +365,7 @@ dotfiles/
 
 ---
 
-## Key mappings
+## Key Mappings
 
 ### Neovim — Leader key = `Space`
 
@@ -209,7 +392,7 @@ dotfiles/
 
 ---
 
-## Update dotfiles
+## Update Dotfiles
 
 ```bash
 cd ~/dotfiles
@@ -222,37 +405,5 @@ git push
 
 ---
 
-## Setup on Mac (1337 school)
-
-```bash
-# Install Homebrew
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-# Install tools
-brew install neovim git ripgrep node
-
-# Install Oh My Zsh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-
-# Install ZSH plugins
-git clone https://github.com/zsh-users/zsh-autosuggestions \
-  ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-
-git clone https://github.com/zsh-users/zsh-syntax-highlighting \
-  ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-
-# Install lazy.nvim
-git clone --filter=blob:none --branch=stable \
-  https://github.com/folke/lazy.nvim.git \
-  ~/.local/share/nvim/lazy/lazy.nvim
-
-# Clone and apply dotfiles
-git clone git@github.com:Abodo-Hatim/dotfiles.git ~/dotfiles
-cp -r ~/dotfiles/nvim ~/.config/nvim
-cp ~/dotfiles/.zshrc ~/.zshrc
-source ~/.zshrc
-```
-
----
-
 *made with ❤️ for 1337 school*
+
