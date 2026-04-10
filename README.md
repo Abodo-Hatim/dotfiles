@@ -208,9 +208,7 @@ ssh -T git@github.com
 
 ---
 
-## Mac Setup (1337 school)
-
-> **Note:** 1337 machines are shared — we use HTTPS instead of SSH to avoid leaving personal credentials on shared computers.
+## Mac Setup
 
 ### 1. Install Homebrew
 
@@ -405,5 +403,5 @@ git push
 
 ---
 
-*made with ❤️ for 1337 school*
+*made with ❤️*
 
